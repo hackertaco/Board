@@ -1,0 +1,33 @@
+version: "3"
+services:
+  database:
+    image: mysql:latest
+    environment:
+      MYSQL_ROOT_PASSWORD: 1234
+      MYSQL_DATABASE: onecomment
+      MYSQL_USER: taco
+      MYSQL_PASSWORD: sb3541sb!!
+      MYSQL_HOST: localhost
+    ports:
+      - "3306:3306"
+    networks:
+      - one-comment
+    restart: always
+    command:
+      - --character-set-server=utf8mb4
+      - --collation-server=utf8mb4_unicode_ci
+    volumes:
+      - /var/lib/mysql
+  application:
+    build:
+      context: ./
+      dockerfile: Dockerfile
+    ports:
+      - "8080:8080"
+    networks:
+      - one-comment
+    depends_on:
+      - database
+networks:
+  one-comment:
+    driver: bridge

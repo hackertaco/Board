@@ -16,15 +16,15 @@ class PostRepositoryTest {
     @Autowired
     private PostRepository postRepository;
 
-//    @BeforeEach
-//    public void reset() {
-//        postRepository.deleteAll();
-//    }
-//
-//    @AfterEach
-//    public void clear() {
-//        postRepository.deleteAll();
-//    }
+    @BeforeEach
+    public void reset() {
+        postRepository.deleteAll();
+    }
+
+    @AfterEach
+    public void clear() {
+        postRepository.deleteAll();
+    }
     @Test
     public void 게시글_생성_가져오기() {
         String title = "제목 입니다.";

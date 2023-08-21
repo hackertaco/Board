@@ -15,7 +15,7 @@ public class PostService {
         log.info("PostsService savePost() 실행", dto);
         Post post = dto.toEntity();
         postRepository.save(post);
-        return dto.getId();
+        return post.getId();
     }
     @Transactional(readOnly = true)
     public PostDto.Response getPost(Long id) {

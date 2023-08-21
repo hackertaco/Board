@@ -18,7 +18,7 @@ public class PostDto {
         private String createdDate, modifiedDate;
         private int view;
         public Post toEntity() {
-            Post posts = Post.builder()
+            return Post.builder()
                     .id(id)
                     .title(title)
                     .author(author)
@@ -26,7 +26,6 @@ public class PostDto {
                     .view(0)
                     .build();
 
-            return posts;
         }
     }
 
@@ -43,7 +42,7 @@ public class PostDto {
             this.id = post.getId();
             this.title = post.getTitle();
             this.author = post.getAuthor();
-            this.content = post.getAuthor();
+            this.content = post.getContent();
             this.createdDate = post.getCreatedDate();
             this.modifiedDate = post.getModifiedDate();
             this.view = post.getView();

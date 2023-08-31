@@ -1,5 +1,9 @@
 package com.nan.bungshin.post;
 
+import com.nan.bungshin.domain.Post;
+import com.nan.bungshin.persistence.PostRepository;
+import com.nan.bungshin.service.PostService;
+import com.nan.bungshin.service.dto.PostDto;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

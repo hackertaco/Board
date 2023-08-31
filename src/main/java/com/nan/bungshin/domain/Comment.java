@@ -1,4 +1,4 @@
-package com.nan.bungshin.post;
+package com.nan.bungshin.domain;
 
 //import com.nan.bungshin.user.User;
 import jakarta.persistence.*;
@@ -33,9 +33,9 @@ public class Comment {
     @JoinColumn(name = "post_id")
     private Post post;
 
-//    @ManyToOne
-//    @JoinColumn(name = "user_id")
-//    private User user; // 작성자
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    private User user; // 작성자
 
     public void update(String comment) {
         this.comment = comment;

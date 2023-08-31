@@ -1,5 +1,12 @@
-package com.nan.bungshin.post;
+package com.nan.bungshin.service;
 
+import com.nan.bungshin.domain.Comment;
+import com.nan.bungshin.domain.Post;
+import com.nan.bungshin.domain.User;
+import com.nan.bungshin.persistence.CommentRepository;
+import com.nan.bungshin.persistence.PostRepository;
+import com.nan.bungshin.persistence.UserRepository;
+import com.nan.bungshin.service.dto.CommentDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -13,11 +20,14 @@ import java.util.stream.Collectors;
 public class CommentService {
     private final CommentRepository commentRepository;
     private final PostRepository postRepository;
+    private final UserRepository userRepository;
 
-    public Long saveComment(Long id, CommentDto.Request dto) {
+    public Long saveComment(Long id, CommentDto.Request dto, String nickname) {
+        User user = userRepository.findByNickname(nickname);
         Post post = postRepository.findById(id).orElseThrow(() ->
                 new IllegalArgumentException("댓글 쓰기 실패: 해당 게시글이 존재하지 않습니다. " + id));
         dto.setPost(post);
+        dto.setUser(user);
         Comment comment = dto.toEntity();
         commentRepository.save(comment);
         return comment.getId();

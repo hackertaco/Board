@@ -1,6 +1,8 @@
 package com.nan.bungshin.post;
 
 //import lombok.extern.log4j.Log4j2;
+import com.nan.bungshin.domain.Post;
+import com.nan.bungshin.persistence.PostRepository;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

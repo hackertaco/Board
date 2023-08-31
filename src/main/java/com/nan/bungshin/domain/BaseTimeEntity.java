@@ -1,4 +1,4 @@
-package com.nan.bungshin.post;
+package com.nan.bungshin.domain;
 
 import jakarta.persistence.*;
 import lombok.Getter;

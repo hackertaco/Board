@@ -1,20 +1,31 @@
-package com.nan.bungshin.post;
+package com.nan.bungshin.service;
 
+import com.nan.bungshin.domain.Post;
+import com.nan.bungshin.domain.User;
+import com.nan.bungshin.persistence.PostRepository;
+import com.nan.bungshin.persistence.UserRepository;
+import com.nan.bungshin.service.dto.PostDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Optional;
+
 @Slf4j
 @RequiredArgsConstructor
 @Service
 public class PostService {
+    private final UserRepository userRepository;
     private final PostRepository postRepository;
     @Transactional
     public Long savePost(PostDto.Request dto){
+//        User user= userRepository.findByNickname(nickname);
+//        dto.setUser(user);
         log.info("PostsService savePost() 실행", dto);
         Post post = dto.toEntity();
         postRepository.save(post);
+
         return post.getId();
     }
     @Transactional(readOnly = true)

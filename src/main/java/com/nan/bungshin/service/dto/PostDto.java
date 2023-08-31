@@ -1,5 +1,7 @@
-package com.nan.bungshin.post;
+package com.nan.bungshin.service.dto;
 
+import com.nan.bungshin.domain.Post;
+import com.nan.bungshin.domain.User;
 import lombok.*;
 
 import java.util.List;
@@ -17,6 +19,7 @@ public class PostDto {
         private String content;
         private String createdDate, modifiedDate;
         private int view;
+        private User user;
         public Post toEntity() {
             return Post.builder()
                     .id(id)
@@ -24,6 +27,7 @@ public class PostDto {
                     .author(author)
                     .content(content)
                     .view(0)
+                    .user(user)
                     .build();
 
         }
@@ -37,6 +41,7 @@ public class PostDto {
         private final String content;
         private final String createdDate, modifiedDate;
         private final int view;
+        private final Long userId;
         private final List<CommentDto.Response> comments;
         public Response(Post post){
             this.id = post.getId();
@@ -46,6 +51,7 @@ public class PostDto {
             this.createdDate = post.getCreatedDate();
             this.modifiedDate = post.getModifiedDate();
             this.view = post.getView();
+            this.userId = post.getUser().getId();
             this.comments = post.getComments().stream().map(CommentDto.Response::new).collect(Collectors.toList());
 
 

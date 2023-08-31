@@ -1,5 +1,6 @@
-package com.nan.bungshin.post;
+package com.nan.bungshin.persistence;
 
+import com.nan.bungshin.domain.Comment;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;

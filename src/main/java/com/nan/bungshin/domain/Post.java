@@ -1,5 +1,7 @@
-package com.nan.bungshin.post;
+package com.nan.bungshin.domain;
 
+import com.nan.bungshin.domain.BaseTimeEntity;
+import com.nan.bungshin.domain.Comment;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -14,7 +16,7 @@ import java.util.List;
 @Builder
 @Getter
 @Table(name = "posts")
-public class Post extends BaseTimeEntity{
+public class Post extends BaseTimeEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
@@ -27,6 +29,9 @@ public class Post extends BaseTimeEntity{
     @Column(columnDefinition = "integer default 0", nullable = false)
     private int view;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id")
+    private User user;
 
 
     @OneToMany(mappedBy = "post", fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)

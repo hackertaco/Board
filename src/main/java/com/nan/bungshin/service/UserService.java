@@ -1,5 +1,6 @@
 package com.nan.bungshin.service;
 
+import com.nan.bungshin.domain.Role;
 import com.nan.bungshin.domain.User;
 import com.nan.bungshin.persistence.UserRepository;
 import com.nan.bungshin.service.dto.UserDto;
@@ -13,6 +14,23 @@ import org.springframework.transaction.annotation.Transactional;
 public class UserService {
     private final UserRepository userRepository;
     private final BCryptPasswordEncoder encoder;
+
+    @Transactional
+    public UserDto.Response register(UserDto.Request userDto){
+        checkUsernameDuplicate(userDto);
+        checkEmailDuplicate(userDto);
+        checkNicknameDuplicate(userDto);
+
+        User newUser = User.builder()
+                .username(userDto.getUsername())
+                .password(encoder.encode(userDto.getPassword()))
+                .nickname(userDto.getNickname())
+                .email(userDto.getEmail())
+                .role(Role.USER)
+                .build();
+        userRepository.save(newUser);
+        return new UserDto.Response(newUser);
+    }
     @Transactional
     public void checkUsernameDuplicate(UserDto.Request dto) {
         boolean usernameDuplicate = userRepository.existsByUsername(dto.toEntity().getUsername());
@@ -39,11 +57,13 @@ public class UserService {
         dto.setPassword(encoder.encode(dto.getPassword()));
         return userRepository.save(dto.toEntity()).getId();
     }
-    @Transactional
-    public void modify(UserDto.Request dto) {
-        User user = userRepository.findById(dto.toEntity().getId()).orElseThrow(() ->
-                new IllegalArgumentException("해당 회원이 존재하지 않습니다."));
-        String encPassword = encoder.encode(dto.getPassword());
-        user.modify(encPassword);
-    }
+
+
+//    @Transactional
+//    public void modify(UserDto.Request dto) {
+//        User user = userRepository.findById(dto.toEntity().getId()).orElseThrow(() ->
+//                new IllegalArgumentException("해당 회원이 존재하지 않습니다."));
+//        String encPassword = encoder.encode(dto.getPassword());
+//        user.modify(encPassword);
+//    }
 }

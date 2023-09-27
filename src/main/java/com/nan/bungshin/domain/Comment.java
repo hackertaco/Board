@@ -1,17 +1,17 @@
 package com.nan.bungshin.domain;
 
-//import com.nan.bungshin.user.User;
+import com.nan.bungshin.service.dto.CommentDto;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+
 @NoArgsConstructor
-@AllArgsConstructor
-@Builder
 @Getter
 @Entity
 @Table(name = "comments")
@@ -33,11 +33,22 @@ public class Comment {
     @JoinColumn(name = "post_id")
     private Post post;
 
-    @ManyToOne
-    @JoinColumn(name = "user_id")
-    private User user; // 작성자
+//    @ManyToOne
+//    @JoinColumn(name = "user_id")
+//    private User user; // 작성자
 
     public void update(String comment) {
         this.comment = comment;
+        this.modifiedDate = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy.MM.dd HH:mm"));
+    }
+
+
+
+    @Builder
+    public Comment(CommentDto.Request dto, Post post){
+        this.comment = dto.getComment();
+        this.post = post;
+        this.createdDate = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy.MM.dd HH:mm"));
+        this.modifiedDate = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy.MM.dd HH:mm"));
     }
 }

@@ -11,7 +11,7 @@ import java.io.Serializable;
 public class UserDto {
     @Data
     @AllArgsConstructor
-    @NoArgsConstructor
+    @NoArgsConstructor(access = AccessLevel.PROTECTED)
     @Builder
     public static class Request {
         private Long id;

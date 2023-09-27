@@ -1,19 +1,13 @@
 package com.nan.bungshin.domain;
 
-import com.nan.bungshin.domain.BaseTimeEntity;
-import com.nan.bungshin.domain.Comment;
+import com.nan.bungshin.service.dto.PostDto;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.util.ArrayList;
 import java.util.List;
 @Entity
 @NoArgsConstructor
-@AllArgsConstructor
-@Builder
 @Getter
 @Table(name = "posts")
 public class Post extends BaseTimeEntity {
@@ -29,16 +23,39 @@ public class Post extends BaseTimeEntity {
     @Column(columnDefinition = "integer default 0", nullable = false)
     private int view;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id")
-    private User user;
-
-
+//    @ManyToOne(fetch = FetchType.LAZY)
+//    @JoinColumn(name = "user_id")
+//    private User user;
     @OneToMany(mappedBy = "post", fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
     @OrderBy("id asc")
     private List<Comment> comments = new ArrayList<>();
+    @OneToMany(mappedBy = "post", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
+    @ToString.Exclude
+    private List<PostHashtag> postHashtags;
+
     public void update(String title, String content) {
         this.title = title;
         this.content = content;
+    }
+    @Builder
+    public Post(PostDto.Request dto)
+    {
+        this.title = dto.getTitle();
+        this.author = dto.getAuthor();
+        this.content = dto.getContent();
+        this.view = 0;
+
+    }
+
+    @Override
+    public String toString() {
+        return "Post{" +
+                "id=" + id +
+                ", title='" + title + '\'' +
+                ", author='" + author + '\'' +
+                ", content='" + content + '\'' +
+                ", view=" + view +
+                ", comments=" + comments +
+                '}';
     }
 }

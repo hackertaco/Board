@@ -46,7 +46,7 @@ public abstract class JwtProvider {
         return Jwts.builder()
                 .setClaims(claims)
                 .setExpiration(expiration)
-                .signWith(key, SignatureAlgorithm.ES512)
+                .signWith(key, SignatureAlgorithm.HS256)
                 .compact();
     }
     public String loadToken(HttpServletRequest request){

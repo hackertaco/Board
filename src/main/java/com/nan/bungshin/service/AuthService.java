@@ -22,6 +22,7 @@ import java.time.Duration;
 import java.time.LocalDateTime;
 
 @Service
+@Transactional(readOnly = true)
 @RequiredArgsConstructor
 public class AuthService {
     private final UserDetailsService userDetailsService;
@@ -34,7 +35,8 @@ public class AuthService {
         return new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
     }
     public Authentication getAuthentication(LoginDto loginDto){
-        SecuredUserDto userDetails = (SecuredUserDto) userDetailsService.loadUserByUsername(loginDto.getUserName());
+        System.out.println(loginDto.getUsername());
+        SecuredUserDto userDetails = (SecuredUserDto) userDetailsService.loadUserByUsername(loginDto.getUsername());
         var authenticationToken = new UsernamePasswordAuthenticationToken(
                 userDetails,
                 loginDto.getPassword(),

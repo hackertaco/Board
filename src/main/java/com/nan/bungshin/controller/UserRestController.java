@@ -23,10 +23,10 @@ public class UserRestController {
     private final AuthService authService;
 
     @PostMapping("/join")
-    public ResponseEntity<String> register(@Valid UserDto.Request dto){
+    public ResponseEntity<String> register(@RequestBody UserDto.Request dto){
         userService.register(dto);
 
-        return new ResponseEntity<>("success", HttpStatus.OK);
+        return ResponseEntity.ok(dto.getUsername());
     }
     @PostMapping("/login")
     public ResponseEntity<UserDto.Response> login(@RequestBody LoginDto loginRequestDto, HttpServletResponse httpServletResponse){
@@ -38,7 +38,6 @@ public class UserRestController {
 
         setAccessTokenToHeader(httpServletResponse, accessToken);
         setRefreshTokenToCookie(httpServletResponse, refreshToken);
-
         return ResponseEntity.ok(result.getUserDto());
     }
     @PostMapping("/logout")

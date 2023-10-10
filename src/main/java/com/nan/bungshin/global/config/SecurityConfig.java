@@ -38,13 +38,15 @@ public class SecurityConfig  {
                 .formLogin(AbstractHttpConfigurer::disable)
                 .httpBasic(AbstractHttpConfigurer::disable)
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
-                .authorizeRequests()
-                .requestMatchers("/api/login").permitAll()
-                .requestMatchers("/api/join").permitAll()
-                .and().exceptionHandling((exception) -> exception.accessDeniedHandler(accessDeniedHandler))
-                .accessDeniedHandler(accessDeniedHandler)
-                .authenticationEntryPoint(authenticationEntryPoint)
-                .and()
+                .authorizeHttpRequests(authorize -> authorize
+                        .requestMatchers("/api/login").permitAll()
+                        .requestMatchers("/api/join").permitAll()
+                )
+                .exceptionHandling((exception) -> {
+                    exception.accessDeniedHandler(accessDeniedHandler)
+                            .authenticationEntryPoint(authenticationEntryPoint);
+                })
+
                 .build();
     }
 

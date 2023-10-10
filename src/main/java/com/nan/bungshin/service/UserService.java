@@ -19,12 +19,10 @@ public class UserService {
     public UserDto.Response register(UserDto.Request userDto){
         checkUsernameDuplicate(userDto);
         checkEmailDuplicate(userDto);
-        checkNicknameDuplicate(userDto);
 
         User newUser = User.builder()
                 .username(userDto.getUsername())
                 .password(encoder.encode(userDto.getPassword()))
-                .nickname(userDto.getNickname())
                 .email(userDto.getEmail())
                 .role(Role.USER)
                 .build();
@@ -45,13 +43,7 @@ public class UserService {
             throw new IllegalStateException("이미 존재하는 이메일입니다.");
         }
     }
-    @Transactional
-    public void checkNicknameDuplicate(UserDto.Request dto) {
-        boolean nicknameDuplicate = userRepository.existsByNickname(dto.toEntity().getNickname());
-        if(nicknameDuplicate){
-            throw new IllegalStateException("이미 존재하는 닉네임입니다.");
-        }
-    }
+
     @Transactional
     public Long userJoin(UserDto.Request dto) {
         dto.setPassword(encoder.encode(dto.getPassword()));

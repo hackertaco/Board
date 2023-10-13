@@ -1,6 +1,7 @@
 package com.nan.bungshin.service.dto;
 
 import com.nan.bungshin.domain.Comment;
+import com.nan.bungshin.domain.User;
 import lombok.*;
 
 import java.time.LocalDateTime;
@@ -11,7 +12,7 @@ public class CommentDto {
     @NoArgsConstructor
     public static class Request{
         private String comment;
-//        private User user;
+        private User user;
         public Request(String comment){
             this.comment = comment;
         }
@@ -24,13 +25,13 @@ public class CommentDto {
         private String createdDate = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy.MM.dd HH:mm"));
         private String modifiedDate = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy.MM.dd HH:mm"));
         private Long postId;
-//        private Long userId;
+        private Long userId;
         public Response(Comment comment) {
             this.id = comment.getId();
             this.comment = comment.getComment();
             this.createdDate = comment.getCreatedDate();
             this.modifiedDate = comment.getModifiedDate();
-//            this.userId = comment.getUser().getId();
+            this.userId = comment.getUser().getId();
             this.postId = comment.getPost().getId();
         }
     }

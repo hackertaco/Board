@@ -2,6 +2,7 @@ package com.nan.bungshin.service;
 
 import com.nan.bungshin.domain.Post;
 import com.nan.bungshin.domain.PostHashtag;
+import com.nan.bungshin.domain.User;
 import com.nan.bungshin.global.PageOption;
 import com.nan.bungshin.persistence.PostHashtagRepository;
 import com.nan.bungshin.persistence.PostRepository;
@@ -12,6 +13,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -28,13 +31,15 @@ public class PostService {
     private final PostHashtagService postHashtagService;
     @Transactional
     public Long savePost(PostDto.Request dto){
-//        User user= userRepository.findByNickname(nickname);
-//        dto.setUser(user);
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        User user= userRepository.findByUsername(authentication.getName()).orElseThrow(() -> new IllegalArgumentException("해당 유저가 존재하지 않습니다: " + Long.parseLong(authentication.getName())));
+        dto.setUser(user);
         log.info("PostsService savePost() 실행", dto);
         Post post = new Post(dto);
         postRepository.save(post);
-        postHashtagService.saveHashtag(post, dto.getHashtags());
-
+        if(dto.getHashtags() != null){
+            postHashtagService.saveHashtag(post, dto.getHashtags());
+        }
         return post.getId();
     }
     @Transactional(readOnly = true)

@@ -2,8 +2,10 @@ package com.nan.bungshin.service.dto;
 
 import com.nan.bungshin.domain.Post;
 import com.nan.bungshin.domain.PostHashtag;
+import com.nan.bungshin.domain.User;
 import lombok.*;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -15,11 +17,18 @@ public class PostDto {
         private String author;
         private String content;
         private List<String> hashtags;
+        private User user;
         public Request( String title, String author, String content, List<String>hashtags){
             this.title = title;
             this.author = author;
             this.content = content;
             this.hashtags = hashtags;
+        }
+        public Request( String title, String author, String content){
+            this.title = title;
+            this.author = author;
+            this.content = content;
+            this.hashtags = new ArrayList<>();
         }
     }
 
@@ -31,7 +40,7 @@ public class PostDto {
         private final String content;
         private final String createdDate, modifiedDate;
         private final int view;
-//        private final Long userId;
+        private final Long userId;
         private final List<CommentDto.Response> comments;
         private List<PostHashtagDto.Response> hashtags;
         public Response(Post post){
@@ -42,7 +51,7 @@ public class PostDto {
             this.createdDate = post.getCreatedDate();
             this.modifiedDate = post.getModifiedDate();
             this.view = post.getView();
-//            this.userId = post.getUser().getId();
+            this.userId = post.getUser().getId();
             this.comments = post.getComments().stream().map(CommentDto.Response::new).collect(Collectors.toList());
 
 

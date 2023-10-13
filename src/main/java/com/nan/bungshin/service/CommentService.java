@@ -2,15 +2,19 @@ package com.nan.bungshin.service;
 
 import com.nan.bungshin.domain.Comment;
 import com.nan.bungshin.domain.Post;
+import com.nan.bungshin.domain.User;
 import com.nan.bungshin.global.PageOption;
 import com.nan.bungshin.persistence.CommentRepository;
 import com.nan.bungshin.persistence.PostRepository;
+import com.nan.bungshin.persistence.UserRepository;
 import com.nan.bungshin.service.dto.CommentDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -23,21 +27,19 @@ import java.util.List;
 public class CommentService {
     private final CommentRepository commentRepository;
     private final PostRepository postRepository;
-//    private final UserRepository userRepository;
+    private final UserRepository userRepository;
 
     public Long saveComment(Long id, CommentDto.Request dto) {
-//        User user = userRepository.findByNickname(nickname);
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         Post post = postRepository.findById(id).orElseThrow(() ->
                 new IllegalArgumentException("댓글 쓰기 실패: 해당 게시글이 존재하지 않습니다. " + id));
-//        dto.setPost(post);
-//        dto.setUser(user);
+        User user= userRepository.findByUsername(authentication.getName()).orElseThrow(() -> new IllegalArgumentException("해당 유저가 존재하지 않습니다: " + Long.parseLong(authentication.getName())));
+        dto.setUser(user);
         Comment comment = new Comment(dto, post);
         commentRepository.save(comment);
         return comment.getId();
     }
     public List<CommentDto.Response> getComment(Long id, PageOption pageOption){
-//        Post post = postRepository.findById(id).orElseThrow(() ->
-//                new IllegalArgumentException("해당 게시글이 존재하지 않습니다. " + id));
         List<CommentDto.Response> list = new ArrayList<>();
         Pageable page = PageRequest.of(pageOption.getPageNum(), pageOption.getSize(), pageOption.getSort());
         Page<Comment> comments = commentRepository.findAllByPostId(id, page);

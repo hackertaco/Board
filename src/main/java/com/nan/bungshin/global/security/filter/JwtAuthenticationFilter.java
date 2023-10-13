@@ -24,7 +24,7 @@ import java.security.SignatureException;
 @Component
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
     private final JwtProvider accessTokenProvider;
-    private final RefreshTokenProvider refreshTokenProvider;
+    private final JwtProvider refreshTokenProvider;
     private final AuthService authService;
 
     @Override

@@ -5,6 +5,7 @@ import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.Getter;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.util.StringUtils;
 
 import java.security.Key;
@@ -12,7 +13,7 @@ import java.security.SignatureException;
 import java.time.Duration;
 import java.util.Base64;
 import java.util.Date;
-
+@Slf4j
 public abstract class JwtProvider {
     @Getter
     private final Duration expirationDuration;
@@ -39,7 +40,8 @@ public abstract class JwtProvider {
             MalformedJwtException,
             SignatureException,
             IllegalArgumentException {
-        return parser.parseClaimsJwt(token).getBody();
+        System.out.println(token);
+        return parser.parseClaimsJws(token).getBody();
     }
     public String issueToken(Claims claims) {
         Date expiration = new Date(System.currentTimeMillis() + expirationDuration.toMillis());
@@ -51,8 +53,11 @@ public abstract class JwtProvider {
     }
     public String loadToken(HttpServletRequest request){
         String payload = loadTokenInternal(request);
-        if(StringUtils.hasLength(payload) && payload.startsWith(JwtConstant.HEADER_PREFIX)){
-            return payload.replace(JwtConstant.HEADER_PREFIX, "");
+        if(StringUtils.hasLength(payload)){
+            if(payload.startsWith(JwtConstant.HEADER_PREFIX)){
+                return payload.replace(JwtConstant.HEADER_PREFIX, "");
+            }
+            return payload;
         }
         return null;
     }
@@ -60,9 +65,18 @@ public abstract class JwtProvider {
         try {
             getClaims(token);
             return true;
-        } catch (Exception e){
-            return false;
+        } catch (MalformedJwtException e){
+            log.info("잘못된 JWT 토큰입니다.");
+        } catch (ExpiredJwtException e){
+            log.info("만료된 JWT 토큰입니다.");
+        }catch (UnsupportedJwtException e){
+            log.info("지원되지 않는 JWT 토큰입니다.");
+        }catch (IllegalArgumentException e){
+            log.info("JWT 토큰이 잘못되었습니다.");
+        }catch (SignatureException e){
+            log.info("시그니처 검증에 실패한 토큰입니다.");
         }
+            return false;
     }
     public boolean shouldReissue(Claims claims){
         Date reissueDate = new Date(System.currentTimeMillis() + reissueDuration.toMillis());

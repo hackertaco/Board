@@ -35,7 +35,6 @@ public class AuthService {
         return new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
     }
     public Authentication getAuthentication(LoginDto loginDto){
-        System.out.println(loginDto.getUsername());
         SecuredUserDto userDetails = (SecuredUserDto) userDetailsService.loadUserByUsername(loginDto.getUsername());
         var authenticationToken = new UsernamePasswordAuthenticationToken(
                 userDetails,

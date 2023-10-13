@@ -41,6 +41,7 @@ public class SecurityConfig  {
                 .authorizeHttpRequests(authorize -> authorize
                         .requestMatchers("/api/login").permitAll()
                         .requestMatchers("/api/join").permitAll()
+                        .anyRequest().authenticated()
                 )
                 .exceptionHandling((exception) -> {
                     exception.accessDeniedHandler(accessDeniedHandler)
